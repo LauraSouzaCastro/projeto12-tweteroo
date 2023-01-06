@@ -24,4 +24,18 @@ app.post('/tweets', (req, res) => {
         res.send("UNAUTHORIZED");
     }
 });
+
+app.get('/tweets', (req, res) => {
+    let ultimosTweets = [];
+    if(tweetes.length <= 10){
+        ultimosTweets = tweetes;
+    }else{
+        ultimosTweets = tweetes.slice(tweetes.length-10, tweetes.length);
+    }
+    const tweetsAvatar = ultimosTweets.map(t => {
+        const usuario = usuarios.find(u => u.username === t.username);
+        return {username: t.username, avatar: usuario.avatar, tweet: t.tweet};
+    });
+    res.send(tweetsAvatar);
+});
 app.listen(5000, () => {console.log("Rodando...")});
