@@ -5,11 +5,13 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const usuario = {username: "", avatar: ""};
+const usuarios = []
 
 app.post('/sign-up', (req, res) => {
-	usuario.username = req.body.username;
-    usuario.avatar = req.body.avatar;
-    res.send(usuario);
+    const usuario = req.body
+    usuarios.push(usuario);
+    console.log(usuarios)
+    res.send("OK");
+
 });
 app.listen(5000, () => {console.log("Rodando...")});
