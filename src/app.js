@@ -10,18 +10,23 @@ const tweetes = [];
 
 app.post('/sign-up', (req, res) => {
     const usuario = req.body;
+    if(!usuario.username || !usuario.avatar){
+        res.status(400).send("Todos os campos são obrigatórios!");
+    }
     usuarios.push(usuario);
-    res.send("OK");
-
+    res.status(201).send("OK");
 });
 
 app.post('/tweets', (req, res) => {
     const tweet = req.body;
+    if(!tweet.username || !tweet.tweet){
+        res.status(400).send("Todos os campos são obrigatórios!");
+    }
     if(usuarios.find(u => u.username === tweet.username)){
         tweetes.push(tweet);
-        res.send("OK");
+        res.status(201).send("OK");
     }else{
-        res.send("UNAUTHORIZED");
+        res.status(401).send("UNAUTHORIZED");
     }
 });
 
