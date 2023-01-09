@@ -6,11 +6,11 @@ app.use(express.json());
 app.use(cors());
 
 const usuarios = [];
-const tweetes = [];
+const tweets = [];
 
 app.post('/sign-up', (req, res) => {
     const usuario = req.body;
-    if(!usuario.username || !usuario.avatar){
+    if(!usuario.username || !usuario.avatar || typeof usuario.username !== "string" || typeof usuario.avatar !== "string"){
         res.status(400).send("Todos os campos são obrigatórios!");
     }
     usuarios.push(usuario);
@@ -19,11 +19,11 @@ app.post('/sign-up', (req, res) => {
 
 app.post('/tweets', (req, res) => {
     const tweet = req.body;
-    if(!tweet.username || !tweet.tweet){
+    if(!tweet.username || !tweet.tweet || typeof tweet.username !== "string" || typeof tweet.tweet !== "string"){
         res.status(400).send("Todos os campos são obrigatórios!");
     }
     if(usuarios.find(u => u.username === tweet.username)){
-        tweetes.push(tweet);
+        tweets.push(tweet);
         res.status(201).send("OK");
     }else{
         res.status(401).send("UNAUTHORIZED");
@@ -32,15 +32,32 @@ app.post('/tweets', (req, res) => {
 
 app.get('/tweets', (req, res) => {
     let ultimosTweets = [];
-    if(tweetes.length <= 10){
-        ultimosTweets = tweetes;
+    if(tweets.length <= 10){
+        ultimosTweets = tweets;
     }else{
-        ultimosTweets = tweetes.slice(tweetes.length-10, tweetes.length);
+        ultimosTweets = tweets.slice(tweets.length-10, tweets.length);
     }
     const tweetsAvatar = ultimosTweets.map(t => {
         const usuario = usuarios.find(u => u.username === t.username);
         return {username: t.username, avatar: usuario.avatar, tweet: t.tweet};
     });
     res.send(tweetsAvatar);
+});
+
+app.get('/tweets/:USERNAME', (req, res) => {
+    const name = req.params.USERNAME;
+    let tweetsUsuario = tweets.filter(t => t.username === name);
+    const tweetsAvatar = tweetsUsuario.map(t => {
+        const usuario = usuarios.find(u => u.username === t.username);
+        return {username: t.username, avatar: usuario.avatar, tweet: t.tweet};
+    });
+    let ultimosTweets = [];
+    if(tweetsAvatar.length <= 10){
+        ultimosTweets = tweetsAvatar;
+    }else{
+        ultimosTweets = tweetsAvatar.slice(tweetsAvatar.length-10, tweetsAvatar.length);
+    }
+    
+    res.send(ultimosTweets);
 });
 app.listen(5000, () => {console.log("Rodando...")});
