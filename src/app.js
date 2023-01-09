@@ -32,12 +32,6 @@ app.post('/tweets', (req, res) => {
 });
 
 app.get('/tweets', (req, res) => {
-    const page = parseInt(req.query.page);
-    if (page && page >= 1) {
-        
-    } else {
-        res.status(400).send("Informe uma página válida!");
-    }
     let ultimosTweets = [];
     if (tweets.length <= 10) {
         ultimosTweets = tweets;
