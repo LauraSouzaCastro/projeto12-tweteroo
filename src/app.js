@@ -34,17 +34,7 @@ app.post('/tweets', (req, res) => {
 app.get('/tweets', (req, res) => {
     const page = parseInt(req.query.page);
     if (page && page >= 1) {
-        let ultimosTweets = [];
-        if (tweets.length <= 10) {
-            ultimosTweets = tweets;
-        } else {
-            ultimosTweets = tweets.slice(tweets.length - (10*page), tweets.length - (10*(page-1)));
-        }
-        const tweetsAvatar = ultimosTweets.map(t => {
-            const usuario = usuarios.find(u => u.username === t.username);
-            return { username: t.username, avatar: usuario.avatar, tweet: t.tweet };
-        });
-        res.send(tweetsAvatar);
+        
     } else {
         res.status(400).send("Informe uma página válida!");
     }
